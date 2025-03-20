@@ -29,12 +29,21 @@ async function fetchVideos() {
     }
 }
 
-// Display videos in the grid
 function displayVideos(videos) {
-    videoContainer.innerHTML = ""; // Clear previous content
+    // Ensure the video-container has the video-grid class
+    videoContainer.classList.add("video-grid");
+    
+    // Clear previous content
+    while (videoContainer.firstChild) {
+        videoContainer.removeChild(videoContainer.firstChild);
+    }
 
     if (videos.length === 0) {
-        videoContainer.innerHTML = "<p>No videos found.</p>";
+        const noVideosMessage = document.createElement("p");
+        noVideosMessage.textContent = "No videos found.";
+        noVideosMessage.style.color = "#fff";
+        noVideosMessage.style.textAlign = "center";
+        videoContainer.appendChild(noVideosMessage);
         return;
     }
 
@@ -42,21 +51,18 @@ function displayVideos(videos) {
         const videoCard = document.createElement("div");
         videoCard.classList.add("video-card");
 
-        // Extract video details
         const thumbnail = video.snippet.thumbnails.medium.url;
         const title = video.snippet.title;
         const channel = video.snippet.channelTitle;
         const videoId = video.id;
         const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-        // Create video card HTML
         videoCard.innerHTML = `
             <img src="${thumbnail}" alt="${title}">
             <h3>${title}</h3>
             <p>${channel}</p>
         `;
 
-        // Add click event to open video on YouTube
         videoCard.addEventListener("click", () => {
             window.open(videoUrl, "_blank");
         });
